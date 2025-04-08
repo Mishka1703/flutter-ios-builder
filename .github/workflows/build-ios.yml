@@ -28,8 +28,8 @@ jobs:
         cd project
         flutter build ios --release --no-codesign
 
-    - name: Upload build artifacts
+    - name: Upload iOS build artifacts
       uses: actions/upload-artifact@v3
       with:
         name: ios-build
-        path: project/build/ios/iphoneos/
+        path: project/build/ios/iphoneos/*.app  # Указание точного пути
