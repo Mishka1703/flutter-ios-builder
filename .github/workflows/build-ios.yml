@@ -10,7 +10,7 @@ jobs:
     steps:
     - name: Clone GitLab repository
       run: |
-        git clone https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/YOUR_USERNAME/YOUR_REPO_NAME.git project
+        git clone https://oauth2:${{ secrets.GITLAB_TOKEN }}@https://gitlab.com/MyJoke/myjoke.git project
         cd project
 
     - name: Set up Flutter
