@@ -1,7 +1,7 @@
 name: Build iOS from GitLab
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # запуск вручную
 
 jobs:
   build:
@@ -10,13 +10,13 @@ jobs:
     steps:
     - name: Clone GitLab repository
       run: |
-        git clone https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/MyJoke/myjoke.git project 
+        git clone https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/YOUR_USERNAME/YOUR_REPO_NAME.git project
         cd project
 
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.16.0'
+        flutter-version: '3.16.0'  # Укажи свою версию Flutter
 
     - name: Install dependencies
       run: |
@@ -28,8 +28,13 @@ jobs:
         cd project
         flutter build ios --release --no-codesign
 
+    - name: Check for generated files
+      run: |
+        echo "Checking for generated files"
+        ls -R project/build/ios/iphoneos/
+
     - name: Upload iOS build artifacts
       uses: actions/upload-artifact@v3
       with:
         name: ios-build
-        path: project/build/ios/iphoneos/*.app  # Указание точного пути
+        path: project/build/ios/iphoneos/Runner.app  # Указание правильного пути
