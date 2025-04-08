@@ -1,0 +1,35 @@
+name: Build iOS from GitLab
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: Clone GitLab repository
+      run: |
+        git clone https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/MyJoke/myjoke.git project 
+        cd project
+
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.16.0'
+
+    - name: Install dependencies
+      run: |
+        cd project
+        flutter pub get
+
+    - name: Build iOS (no code signing)
+      run: |
+        cd project
+        flutter build ios --release --no-codesign
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: ios-build
+        path: project/build/ios/iphoneos/
