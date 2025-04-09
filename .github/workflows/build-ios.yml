@@ -1,7 +1,7 @@
 name: Build iOS from GitLab
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # This allows you to trigger the workflow manually
 
 jobs:
   build:
@@ -12,46 +12,28 @@ jobs:
       run: |
         git clone https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/MyJoke/myjoke.git project
         cd project
-
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.29.2'
+        flutter-version: '3.29.2'  # Specify your Flutter version here
 
-    - name: Install Flutter dependencies
+    - name: Install dependencies
       run: |
         cd project
         flutter pub get
-
     - name: Build iOS (no code signing)
       run: |
         cd project
         flutter build ios --release --no-codesign
-
-    - name: Install CocoaPods dependencies
-      run: |
-        cd project/ios
-        pod install
-
-    - name: Debug: Check for Generated.xcconfig
-      run: |
-        ls -l project/ios/Flutter/
-        cat project/ios/Flutter/Generated.xcconfig || echo "Missing Generated.xcconfig!"
-
-    - name: Check build output
+        echo "Build completed successfully"
+    - name: Check if build files are created
       run: |
         echo "Listing contents of build directory"
         ls -R project/build/ios/iphoneos/
-
     - name: Upload iOS build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: ios-build
         path: project/build/ios/iphoneos/Runner.app
 
-        - name: Upload iOS build artifacts
-  uses: actions/upload-artifact@v4
-  with:
-    name: ios-build
-    path: project/build/ios/iphoneos/Runner.app
 
